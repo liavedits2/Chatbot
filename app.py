@@ -4,7 +4,7 @@ import threading
 import time
 import os
 
-app = Flask(main.py)
+app = Flask(__name__)
 
 # Initialize the Gemini Client using the official SDK
 try:
