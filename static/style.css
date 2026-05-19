@@ -1,0 +1,179 @@
+/* --- CSS Variables for consistent theming --- */
+:root {
+    --bg-color: #f0f2f5;
+    --text-primary: #1c1e21;
+    --text-secondary: #606770;
+    --panel-bg: #ffffff;
+    --accent-blue: #0084ff;
+    --success-green: #00a400;
+    --danger-red: #fa383e;
+    --terminal-bg: #1e1e1e;
+    --terminal-text: #00ff00;
+    --radius-md: 8px;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Global Reset --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.5;
+    padding: 2rem 1rem;
+}
+
+.app-container {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* --- Header & Badges --- */
+header {
+    text-align: center;
+    background: var(--panel-bg);
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    color: var(--accent-blue);
+    margin-bottom: 0.5rem;
+}
+
+.status-indicator {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 0.5rem;
+}
+
+.badge-running {
+    background-color: rgba(0, 164, 0, 0.1);
+    color: var(--success-green);
+    border: 1px solid var(--success-green);
+}
+
+.badge-idle {
+    background-color: rgba(250, 56, 62, 0.1);
+    color: var(--danger-red);
+    border: 1px solid var(--danger-red);
+}
+
+/* --- Panels --- */
+.panel {
+    background: var(--panel-bg);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.panel h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid #e4e6eb;
+    padding-bottom: 0.5rem;
+}
+
+/* --- Controls Interface --- */
+.button-group {
+    display: flex;
+    gap: 1rem;
+}
+
+form {
+    flex: 1;
+}
+
+.btn {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn:hover:not([disabled]) {
+    opacity: 0.9;
+}
+
+.btn:active:not([disabled]) {
+    transform: translateY(2px);
+}
+
+.btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(50%);
+}
+
+.btn-start {
+    background-color: var(--success-green);
+}
+
+.btn-stop {
+    background-color: var(--danger-red);
+}
+
+/* --- Terminal / Monitor --- */
+.terminal {
+    background-color: var(--terminal-bg);
+    color: var(--terminal-text);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    height: 250px;
+    overflow-y: auto;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.9rem;
+}
+
+.terminal ul {
+    list-style: none;
+}
+
+.terminal li {
+    padding: 0.3rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terminal li:last-child {
+    border-bottom: none;
+}
+
+.terminal-empty {
+    color: #888;
+    text-align: center;
+    font-style: italic;
+    margin-top: 5rem;
+}
+
+.refresh-notice {
+    text-align: right;
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+}

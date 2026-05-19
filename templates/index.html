@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Pure HTML Auto-refresh: Updates the page every 3 seconds to fetch new logs -->
+    <meta http-equiv="refresh" content="3">
+    <title>Bot Control Center</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Bot Control Center</h1>
+            <p class="status-indicator">
+                Current Status: 
+                <span class="badge {{ 'badge-running' if bot.is_running else 'badge-idle' }}">
+                    {{ bot.status_message }}
+                </span>
+            </p>
+        </header>
+
+        <main>
+            <section class="panel controls-panel">
+                <h2>Command Interface</h2>
+                <div class="button-group">
+                    <form action="/start" method="post">
+                        <!-- Disable start button if bot is already running -->
+                        <button type="submit" class="btn btn-start" {{ 'disabled' if bot.is_running else '' }}>
+                            ▶ Start Bot
+                        </button>
+                    </form>
+                    <form action="/stop" method="post">
+                        <!-- Disable stop button if bot is already idle -->
+                        <button type="submit" class="btn btn-stop" {{ 'disabled' if not bot.is_running else '' }}>
+                            ■ Stop Bot
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="panel log-panel">
+                <h2>Activity Monitor</h2>
+                <div class="terminal">
+                    {% if bot.log %}
+                        <ul>
+                            <!-- Reverse the loop to show newest logs at the top -->
+                            {% for entry in bot.log | reverse %}
+                                <li>{{ entry }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="terminal-empty">Awaiting commands...</p>
+                    {% endif %}
+                </div>
+                <p class="refresh-notice"><small>Display auto-refreshes every 3 seconds.</small></p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
