@@ -4,11 +4,11 @@ import threading
 import time
 import os
 
-app = Flask(__name__)
+app = Flask(main.py)
 
-# Initialize the Gemini Client
-# Note: This will fail if the GEMINI_API_KEY environment variable is not set.
+# Initialize the Gemini Client using the official SDK
 try:
+    # client = genai.Client() automatically checks os.environ["GEMINI_API_KEY"]
     client = genai.Client()
 except Exception as e:
     print("Warning: Failed to initialize Gemini Client. Is your GEMINI_API_KEY set?")
@@ -28,12 +28,12 @@ class BackgroundAIBot:
 
         self.is_running = True
         self.status_message = "AI is thinking..."
-        self._add_log("AI Bot connected to Google AI Studio.")
+        self._add_log("AI Bot successfully authenticated with Google AI Studio.")
         
         # Core AI Execution Loop
         while self.is_running:
             try:
-                # Call the Gemini API (using the fast flash model)
+                # Call the Gemini API using the recommended flash model
                 response = client.models.generate_content(
                     model='gemini-2.5-flash',
                     contents='Generate a very short, interesting, and obscure one-sentence fact about technology, space, or nature. Do not include introductory text.'
@@ -43,8 +43,8 @@ class BackgroundAIBot:
             except Exception as e:
                 self._add_log(f"[Error] API Call Failed: {str(e)}")
             
-            # Wait 15 seconds before the next call to avoid rate limits
-            # We break the sleep into 1-second chunks so the bot can stop immediately when requested
+            # Wait 15 seconds before the next call to respect rate limits.
+            # Split into 1-second ticks so the bot can stop immediately when the user commands it.
             for _ in range(15):
                 if not self.is_running:
                     break
@@ -57,15 +57,17 @@ class BackgroundAIBot:
 
     def _add_log(self, message):
         self.log.append(message)
+        # Prevent memory leaks by keeping the log length manageable
         if len(self.log) > 15:
             self.log.pop(0)
 
 bot = BackgroundAIBot()
 bot_thread = None
 
-# --- Web Routes ---
+# --- Web Server Routes ---
 @app.route('/', methods=['GET'])
 def index():
+    # Pass the current state of our live bot instance straight into the template
     return render_template('index.html', bot=bot)
 
 @app.route('/start', methods=['POST'])
@@ -84,4 +86,5 @@ def stop_bot():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
+    # Used for local development only. Render will execute via Gunicorn.
     app.run(debug=True, host='127.0.0.1', port=5000, threaded=True)
